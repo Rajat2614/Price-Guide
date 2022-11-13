@@ -3,14 +3,15 @@ const { type } = require("os");
 const { mainModule } = require("process");
 const puppeteer = require("puppeteer");
 
-const scrap = require("./main");
+const scrap = require("./AmazonScrap/amazonmain");
 
-const loginLink = "https://www.amazon.in";
-const productName = "Iphone 13 Starlight 128gb";
+const amazonLink = "https://www.amazon.in";
+const cromaLink = "https://www.croma.com";
+const productName = "Redmi Note 9";
 
-let page;
+let page1, page2;
 let browserOpen = puppeteer.launch({
-    headless: true,
+    headless: false,
     slowMo: true,
     defaultViewport: null,
     args: ["--start-maximized"]
@@ -22,21 +23,46 @@ browserOpen
         return browserOpenPromise;
     }).then(function (newTab) {
         // open google on new page
-        page = newTab;
-        let openAmazon = newTab.goto(loginLink);
+        page1 = newTab;
+        let openAmazon = newTab.goto(amazonLink);
         return openAmazon;
     }).then(function () {
-        let productEntered = page.type("input[id='twotabsearchtextbox']", productName, { delay: 50 });
+        let productEntered = page1.type("input[id='twotabsearchtextbox']", productName, { delay: 50 });
         return productEntered;
     }).then(function () {
-        return waitAndClick("input[type='submit']", page);
+        return waitAndClick("input[type='submit']", page1);
     }).then(function () {
-        let waitFor3Seconds = page.waitForTimeout(3000);
+        let waitFor3Seconds = page1.waitForTimeout(3000);
         return waitFor3Seconds;
     }).then(function () {
         //console.log(page.url());
-        scrap(page.url());
+        scrap(page1.url());
+    }).then(function(){
+        return page1.close();
     })
+
+    
+    // browserOpen
+    // .then(function (browserObj) {
+    //     let browserOpenPromise = browserObj.newPage();
+    //     return browserOpenPromise;
+    // }).then(function (newTab) {
+    //     // open google on new page
+    //     page2 = newTab;
+    //     let openCroma = newTab.goto(cromaLink);
+    //     return openCroma;
+    // }).then(function () {
+    //     let productEntered = page2.type("input[id='search']", productName, { delay: 50 });
+    //     return productEntered;
+    // }).then(function () {
+    //     return waitAndClick("input[type='submit']", page2);
+    // }).then(function () {
+    //     let waitFor3Seconds = page2.waitForTimeout(3000);
+    //     return waitFor3Seconds;
+    // }).then(function () {
+    //     //console.log(page.url());
+    //     scrap(page2.url());
+    // })
 
     function waitAndClick(selector, cPage) {
         return new Promise(function (resolve, reject) {
