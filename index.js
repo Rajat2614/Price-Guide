@@ -3,7 +3,8 @@ const { type } = require("os");
 const { mainModule } = require("process");
 const puppeteer = require("puppeteer");
 
-const scrap = require("./AmazonScrap/amazonmain");
+const scrapAmzn = require("./AmazonScrap/amazonmain");
+const scrapCroma = require("./CromaScrap/cromamain");
 
 const amazonLink = "https://www.amazon.in";
 const cromaLink = "https://www.croma.com";
@@ -17,52 +18,55 @@ let browserOpen = puppeteer.launch({
     args: ["--start-maximized"]
 });
 
-browserOpen
+// browserOpen
+//     .then(function (browserObj) {
+//         let browserOpenPromise = browserObj.newPage();
+//         return browserOpenPromise;
+//     }).then(function (newTab) {
+//         // open google on new page
+//         page1 = newTab;
+//         let opencroma = newTab.goto(cromaLink);
+//         return openAmazon;
+//     }).then(function () {
+//         let productEntered = page1.type("input[id='twotabsearchtextbox']", productName, { delay: 50 });
+//         return productEntered;
+//     }).then(function () {
+//         return waitAndClick("input[type='submit']", page1);
+//     }).then(function () {
+//         let waitFor3Seconds = page1.waitForTimeout(3000);
+//         return waitFor3Seconds;
+//     }).then(function () {
+//         //console.log(page.url());
+//         scrapAmzn(page1.url());
+//     }).then(function(){
+//         return page1.close();
+//     })
+
+    
+    browserOpen
     .then(function (browserObj) {
         let browserOpenPromise = browserObj.newPage();
         return browserOpenPromise;
     }).then(function (newTab) {
-        // open google on new page
-        page1 = newTab;
-        let openAmazon = newTab.goto(amazonLink);
-        return openAmazon;
+        // open Croma on new page
+        page2 = newTab;
+        let openCroma = newTab.goto(cromaLink);
+        return openCroma;
     }).then(function () {
-        let productEntered = page1.type("input[id='twotabsearchtextbox']", productName, { delay: 50 });
+        let productEntered = page2.type("input[id='search']", productName, { delay: 50 });
         return productEntered;
     }).then(function () {
-        return waitAndClick("input[type='submit']", page1);
+        let EnterisPressed = page2.keyboard.press("Enter");
+        return EnterisPressed;
     }).then(function () {
-        let waitFor3Seconds = page1.waitForTimeout(3000);
+        let waitFor3Seconds = page2.waitForTimeout(3000);
         return waitFor3Seconds;
     }).then(function () {
         //console.log(page.url());
-        scrap(page1.url());
+        scrapCroma(page2.url());
     }).then(function(){
-        return page1.close();
+        return page2.close();
     })
-
-    
-    // browserOpen
-    // .then(function (browserObj) {
-    //     let browserOpenPromise = browserObj.newPage();
-    //     return browserOpenPromise;
-    // }).then(function (newTab) {
-    //     // open google on new page
-    //     page2 = newTab;
-    //     let openCroma = newTab.goto(cromaLink);
-    //     return openCroma;
-    // }).then(function () {
-    //     let productEntered = page2.type("input[id='search']", productName, { delay: 50 });
-    //     return productEntered;
-    // }).then(function () {
-    //     return waitAndClick("input[type='submit']", page2);
-    // }).then(function () {
-    //     let waitFor3Seconds = page2.waitForTimeout(3000);
-    //     return waitFor3Seconds;
-    // }).then(function () {
-    //     //console.log(page.url());
-    //     scrap(page2.url());
-    // })
 
     function waitAndClick(selector, cPage) {
         return new Promise(function (resolve, reject) {
