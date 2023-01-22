@@ -11,7 +11,7 @@ function getDetailscroma($,prodNameArr,pricesArr,ratingArr,reviewArr,orgPriceArr
         let rating = $(ratingArr[i]).text();
         let review = $(reviewArr[i]).text();
         let orgPrice = $(orgPriceArr[i]).text();
-        if(prodName.search("Apple iPhone 13") != -1 ){
+        if(prodName.search("") != -1 ){
 
             if(orginalPrice == ""){
                 orginalPrice = price;

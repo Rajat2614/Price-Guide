@@ -2,10 +2,10 @@ const cheerio = require("cheerio");
 const request = require("request");
 const fs = require("fs");
 
-const getDetails = require("./amazonfile");
+const getDetails = require("./flipkartfile");
 
-function scrapping(url,productName){
-
+function scrapFlipkart(url,productName){
+    //console.log(url);
     request(url, cb);
 
     function cb(error, response, html) {
@@ -20,16 +20,21 @@ function scrapping(url,productName){
     function getTopicLinks(html,productName) {
         let $ = cheerio.load(html);
 
-        let prodNameArr = $(".a-size-medium.a-color-base.a-text-normal");
-        let pricesArr = $(".a-price-whole");
-        let ratingArr = $(".a-icon-alt");
+        // div class price class="_30jeq3 _1_WHN1
+        // div original price = class="_3I9_wc _27UcVY"
+        // rating * div class="_3LWZlK"
+        // span class class="_2_R_DZ", 4th span
+        
+        let prodNameArr = $("._4rR01T");
+        let pricesArr = $("._30jeq3._1_WHN1");
+        let ratingArr = $("._3LWZlK");
         // let reviewArr = $(".a-size-base.puis-light-weight-text.s-link-centralized-style");
-        let orgPriceArr = $(".a-price.a-text-price .a-offscreen");
+        let orgPriceArr = $("._3I9_wc._27UcVY");
         getDetails($,prodNameArr,pricesArr,ratingArr,orgPriceArr,productName);
-
+        
     }
     
 }
 
-module.exports = scrapping;
+module.exports = scrapFlipkart;
 
