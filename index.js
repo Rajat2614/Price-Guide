@@ -11,9 +11,11 @@ const amazonLink = "https://www.amazon.in";
 const cromaLink = "https://www.croma.com";
 const flipkartLink = "https://www.flipkart.com";
 
-const productName = "Redmi Note 9";
+const productName = "Canon Camera";
+const checkName = productName.split(" ");
 
 let page1, page2, page3;
+
 let browserOpen = puppeteer.launch({
     headless: true,
     slowMo: false,
@@ -42,14 +44,16 @@ browserOpen
         let waitFor0Seconds = page1.waitForTimeout(300);
         return waitFor0Seconds;
     }).then(function () {
-        scrapAmzn(page1.url(), productName);
+        scrapAmzn(page1.url(), checkName);
     }).then(function () {
         scrapFlipkart(`https://www.flipkart.com/search?q=${productName}`);
     }).then(function () {
         return page1.close();
+    }).then(function () {
+        return page1.close();
     })
 
-
+    
 
 // browserOpen
 //     .then(function (browserObj) {

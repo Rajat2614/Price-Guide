@@ -19,13 +19,23 @@ function scrapping(url,productName){
 
     function getTopicLinks(html,productName) {
         let $ = cheerio.load(html);
-
-        let prodNameArr = $(".a-size-medium.a-color-base.a-text-normal");
-        let pricesArr = $(".a-price-whole");
-        let ratingArr = $(".a-icon-alt");
-        // let reviewArr = $(".a-size-base.puis-light-weight-text.s-link-centralized-style");
-        let orgPriceArr = $(".a-price.a-text-price .a-offscreen");
-        getDetails($,prodNameArr,pricesArr,ratingArr,orgPriceArr,productName);
+        let prodNameArr=[],pricesArr=[],ratingArr=[],orgPriceArr=[];
+        let container = $(".s-card-container.s-overflow-hidden.aok-relative.puis-include-content-margin.puis.s-latency-cf-section.s-card-border");
+        //console.log(container.length);
+        for(let i=0;i<container.length;i++){
+            $ = cheerio.load(container[i]);
+            if($(".a-price-whole").text() && $(".a-price.a-text-price .a-offscreen").text()){
+                //console.log($(".a-price.a-text-price .a-offscreen").text());
+                prodNameArr.push($(".a-size-medium.a-color-base.a-text-normal").text());
+                pricesArr.push($($(".a-price-whole")[0]).text());
+                ratingArr.push($(".a-icon-alt").text());
+                orgPriceArr.push($($(".a-price.a-text-price .a-offscreen")[0]).text());
+                // console.log($($(".a-price-whole")[0]).text());
+            }
+            
+        }
+        // console.log(prodNameArr.length + "+" + pricesArr.length + "+" + ratingArr.length + "+" + orgPriceArr.length);
+        getDetails(prodNameArr,pricesArr,ratingArr,orgPriceArr,productName);
 
     }
     
